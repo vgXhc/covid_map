@@ -1,0 +1,12 @@
+name: covid_map
+title: covid_map
+username:
+account: vgxhc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2003395
+bundleId: 2929676
+url: https://vgxhc.shinyapps.io/covid_map/
+when: 1585262168.28575
+asMultiple: FALSE
+asStatic: FALSE
