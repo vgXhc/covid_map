@@ -14,6 +14,26 @@ updated <- tagList("Last updated: ",
                   " Shop list: ",
                   bfw_link)#get time of last update and add credit
 
+unknown <- makeAwesomeIcon(library = "fa", 
+                         icon = "question",
+                         markerColor = "lightgray")
+known <- makeAwesomeIcon(icon = "bicycle",
+                         library = "fa")
+
+shops <- df %>% 
+    rename(name = `Shop Name`) %>% 
+    mutate(Status = replace_na(Status, "unknown")) %>% 
+    mutate(pop = paste0("<b>",name, "</b><br>",
+                        "Phone: ", Phone, "<br>",
+                        "Website: ", Website, "<br>",
+                        "Operating Status: ", Status))
+
+known_shops <- shops %>% 
+    filter(Status != "unknown")
+
+unknown_shops <- shops %>% 
+    filter(Status == "unknown")
+
 ui <- fluidPage(
     leafletOutput("mymap"),
     p(),
@@ -22,19 +42,13 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-    shops <- df %>% 
-        rename(name = `Shop Name`) %>% 
-        mutate(Status = replace_na(Status, "unknown")) %>% 
-        mutate(pop = paste0("<b>",name, "</b><br>",
-                            "Phone: ", Phone, "<br>",
-                            "Website: ", Website, "<br>",
-                            "Operating Status: ", Status))
+
     
     output$mymap <- renderLeaflet({
-        shops %>% 
-            leaflet(width = "90%") %>% 
+        leaflet(width = "90%") %>% 
             addProviderTiles(provider = "Stamen.TonerLite") %>%
-            addMarkers(lng = ~Long, lat = ~Lat, popup = ~pop)
+            addAwesomeMarkers(data = unknown_shops, lng = ~Long, lat = ~Lat, popup = ~pop, icon = unknown) %>% 
+            addAwesomeMarkers(data = known_shops, lng = ~Long, lat = ~Lat, popup = ~pop, icon = known)
     })
 }
 
